@@ -20,7 +20,7 @@ def to_set(string):
 def find_common_letter(sack_1, sack_2):
     return to_set(sack_1).intersection(to_set(sack_2)).pop()
 
-for line in lines: 
+for line in lines:
     middle = int(len(line) / 2)
     end = len(line)
     sacks = [line[0:middle], line[middle:end]]
