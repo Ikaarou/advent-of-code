@@ -21,17 +21,17 @@ class Folder:
 
 file_system = Folder()
 
-def get_folders_size(big_folder, size_under, directories_under_required, space_to_free = 0):
+def get_folders_size(big_folder, size_under, folder_with_enough_space, space_to_free = 0):
     sub_folder_size = 0
     for folder in big_folder.folders:
-        size, size_under, directories_under_required = get_folders_size(folder, size_under, directories_under_required, space_to_free)
+        size, size_under, folder_with_enough_space = get_folders_size(folder, size_under, folder_with_enough_space, space_to_free)
         sub_folder_size += size
-    if big_folder.size + sub_folder_size < 100000:
-        size_under += big_folder.size + sub_folder_size
-    if big_folder.size + sub_folder_size > space_to_free:
-        directories_under_required.append(big_folder.size + sub_folder_size)
-
-    return big_folder.size + sub_folder_size, size_under, directories_under_required
+    folder_size = big_folder.size + sub_folder_size
+    if folder_size < 100000:
+        size_under += folder_size
+    if folder_size > space_to_free:
+        folder_with_enough_space.append(folder_size)
+    return folder_size, size_under, folder_with_enough_space
 
 def add_folder(current_folder, name):
     folder = Folder()
