@@ -3,6 +3,11 @@
 file = open('input.txt',mode='r')
 lines = file.read().splitlines()
 
+def parse(line):
+    direction, steps = line.split()
+    steps = int(steps)
+    return [direction, steps]
+
 MOVES = {
     'U': (0, 1),
     'D': (0, -1),
@@ -10,37 +15,36 @@ MOVES = {
     'R': (1, 0),
 }
 
-def should_move_tail(head, tail):
-    if abs(head[0] - tail[0]) > 1 or abs(head[1] - tail[1]) > 1:
-        return True
-    return False
+def move_to_apply(head, tail):
+    delta_x = head[0] - tail[0]
+    delta_y = head[1] - tail[1]
+    if abs(delta_x) < 2 and abs(delta_y) < 2:
+        return (0, 0)
 
-def increment_value(x1, x2):
-    if (x1 - x2) > 0:
-        return 1
-    if (x1 - x2) < 0:
-        return -1
-    return 0
+    if abs(delta_x) == 2 and abs(delta_y) == 2:
+        return (delta_x / 2, delta_y / 2)
+
+    return (delta_x / 2, delta_y) if abs(delta_x) == 2 else (delta_x, delta_y / 2)
+
+def move_link(link, move):
+    return (link[0] + move[0], link[1] + move[1])
 
 def move_rope(rope, move):
     for idx, link in enumerate(rope):
-        previous_link = rope[idx - 1]
         if idx == 0:
-            rope[idx] = (link[0] + move[0], link[1] + move[1])
-        elif (should_move_tail(previous_link, link)):
-            new_link = (link[0] + (increment_value(previous_link[0], link[0])), link[1] + (increment_value(previous_link[1], link[1])))
-            rope[idx] = new_link
+            rope[idx] = move_link(link, move)
+        else:
+            rope[idx] = move_link(link, move_to_apply(rope[idx - 1], link))
 
 def visited_by_tails_for_rope(rope):
-    visited_by_tail = []
-    for line in lines:
-        direction, steps = line.split()
-        steps = int(steps)
+    visited_by_tail = set()
+    directions = map(parse, lines)
+    for direction, steps in directions:
         move = MOVES[direction]
         for i in range(0, steps):
             move_rope(rope, move)
-            visited_by_tail.append(rope[len(rope) - 1])
-    return len(list(set(visited_by_tail)))
+            visited_by_tail.add(rope[len(rope) - 1])
+    return len(visited_by_tail)
 
 rope_1 = [(0, 0), (0, 0)]
 rope_2 = [(0, 0) for i in range(0, 10)]
