@@ -22,12 +22,14 @@ def increment_value(x1, x2):
         return -1
     return 0
 
-def move_rope(rope, old_head_position):
-    for idx, link in enumerate(rope[1:]):
-        if (should_move_tail(rope[idx], link)):
-            new_link = (link[0] + (increment_value(rope[idx][0], link[0])), link[1] + (increment_value(rope[idx][1], link[1])))
-            rope[idx + 1] = new_link
-            old_head_position = new_link
+def move_rope(rope, move):
+    for idx, link in enumerate(rope):
+        previous_link = rope[idx - 1]
+        if idx == 0:
+            rope[idx] = (link[0] + move[0], link[1] + move[1])
+        elif (should_move_tail(previous_link, link)):
+            new_link = (link[0] + (increment_value(previous_link[0], link[0])), link[1] + (increment_value(previous_link[1], link[1])))
+            rope[idx] = new_link
 
 def visited_by_tails_for_rope(rope):
     visited_by_tail = []
@@ -36,9 +38,7 @@ def visited_by_tails_for_rope(rope):
         steps = int(steps)
         move = MOVES[direction]
         for i in range(0, steps):
-            old_head = rope[0]
-            rope[0] = (old_head[0] + move[0], old_head[1] + move[1])
-            move_rope(rope, old_head)
+            move_rope(rope, move)
             visited_by_tail.append(rope[len(rope) - 1])
     return len(list(set(visited_by_tail)))
 
