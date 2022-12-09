@@ -34,7 +34,6 @@ def visible_from_bottom(forest, i, j):
         trees.append(forest[k][j])
     return max(trees) < forest[i][j]
 
-
 def tallest_from_side(forest):
     total = 0
     for i in range(1, len(forest) - 1):
