@@ -23,7 +23,7 @@ class Monkey:
         return v1 * v2 if self.operation[1] == '*' else v1 + v2
 
     def throw_to(self, item):
-        return self.results[True] if item % self.test == 0 else self.results[False]
+        return self.results[item % self.test == 0]
 
 def get_total(monkeys):
     inspected = list(map(lambda m: m.inspected, monkeys))
