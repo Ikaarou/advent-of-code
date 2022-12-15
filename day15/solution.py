@@ -26,6 +26,8 @@ for line in lines:
         if (sx == x and sy == REQUIRED_ROW):
             return True
         return False
+    if (sy - manhattan >= REQUIRED_ROW >= sy + manhattan):
+        continue
 
     for x in range(sx - manhattan, sx + manhattan + 1):
         remaining = abs(abs(sx - x) - manhattan)
